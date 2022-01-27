@@ -1,0 +1,14 @@
+.form__handlers {
+  margin: 0 auto;
+  padding: 0;
+  max-width: 358px;
+  height: 50px;
+  border: 0;
+}
+
+@media all and (max-width: 768px) {
+  .form__handlers{
+    max-width: 238px;
+    height: 46px;
+  }
+}

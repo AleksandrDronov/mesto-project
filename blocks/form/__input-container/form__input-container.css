@@ -1,0 +1,13 @@
+.form__input-container {
+  max-width: 358px;
+  margin: auto;
+  padding: 47px 0 46px;
+  border: 0;
+}
+
+@media all and (max-width: 768px) {
+  .form__input-container {
+    max-width: 238px;
+    padding: 75px 0 42px;
+  }
+}
