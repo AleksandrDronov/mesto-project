@@ -9,6 +9,7 @@
   margin-bottom: 5px;
   margin-right: 5px;
   background-color: #FFFFFF;
+  padding: 0;
 }
 
 .photo-grid__button:hover {
