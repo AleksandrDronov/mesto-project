@@ -1,6 +1,6 @@
 .photo-grid__button {
   background-image: url(../../../images/heart_disabled.svg);
-  object-fit: cover;
+  object-fit: contain;
   width: 22px;
   height: 19px;
   border: none;
