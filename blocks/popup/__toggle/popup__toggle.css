@@ -1,4 +1,9 @@
 .popup__toggle {
+  background-image: url(../../../images/Close\ Icon.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: #000000;
+  border: none;
   width: 32px;
   height: 32px;
   position: absolute;
@@ -6,6 +11,8 @@
   right: -40px;
   cursor: pointer;
   transition: opacity .4s;
+  margin: 0;
+  padding: 0;
 }
 
 .popup__toggle:hover {

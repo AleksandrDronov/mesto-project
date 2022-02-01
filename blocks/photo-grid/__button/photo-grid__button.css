@@ -1,5 +1,6 @@
 .photo-grid__button {
   background-image: url(../../../images/heart_disabled.svg);
+  background-repeat: no-repeat;
   width: 22px;
   height: 19px;
   border: none;
@@ -9,7 +10,6 @@
   margin-right: 5px;
   background-color: #FFFFFF;
   padding: 0;
-  background-repeat: no-repeat;
 }
 
 .photo-grid__button:hover {

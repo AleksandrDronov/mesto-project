@@ -18,73 +18,65 @@
       <img class="profile__avatar" src="./images/image.jpg" alt="Фотография профиля">
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
-        <div class="profile__toggle">
-          <img class="profile__toggle-image" src="./images/Vector2.svg">
-        </div>
+        <button class="profile__toggle" type="button"></button>
         <p class="profile__subtitle">Исследователь океана</p>
       </div>
-      <button class="profile__add-button">
-        <img class="profile__add-button-image"src="./images/Vector.svg">
-      </button>
+      <button class="profile__add-button" type="button"></button>
     </section>
     <section class="photo-grid">
       <ul class="photo-grid__list">
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/karachevsk.jpg" alt="Карачаевск">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Карачаево-Черкессия</p>
+            <h2 class="photo-grid__title">Карачаево-Черкессия</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/elbrus.jpg" alt="Гора Эльбрус">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Гора Эльбрус</p>
+            <h2 class="photo-grid__title">Гора Эльбрус</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/Dombay.jpg" alt="Домбай">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Домбай</p>
+            <h2 class="photo-grid__title">Домбай</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/elbrus.jpg" alt="Гора Эльбрус">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Гора Эльбрус</p>
+            <h2 class="photo-grid__title">Гора Эльбрус</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/spb.jpeg" alt="Санкт-Петерург">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Санкт-Петербург</p>
+            <h2 class="photo-grid__title">Санкт-Петербург</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
         <li class="photo-grid__card">
           <img class="photo-grid__image" src="./images/elbrus.jpg" alt="Гора Эльбрус">
           <div class="photo-grid__container">
-            <p class="photo-grid__title">Гора Эльбрус</p>
+            <h2 class="photo-grid__title">Гора Эльбрус</h2>
             <button type="button" class="photo-grid__button"></button>
           </div>
         </li>
       </ul>
     </section>
-    <section class="popup popup_opened">
+    <section class="popup">
       <div class="popup__container">
-        <div class="popup__toggle">
-          <img class="popup__toggle-image" src="./images/Close Icon.svg" alt="крест">
-        </div>
+        <button class="popup__toggle" type="button"></button>
         <h2 class="popup__heading">Редактировать профиль</h2>
-        <form class="form">
+        <form class="form" name="profile">
           <fieldset class="form__input-container">
-            <label class="form__label" for="name">Имя</label>
-            <input type="text" class="form__item" id="name" name="name" value="Жак-Ив Кусто" required>
-            <label class="form__label" for="job">О себе</label>
-            <input type="text" class="form__item" id="job" name="job" value="Исследователь океана" required>
+            <input type="text" class="form__item" name="name" value="Жак-Ив Кусто" required>
+            <input type="text" class="form__item" name="job" value="Исследователь океана" required>
           </fieldset>
           <fieldset class="form__handlers">
             <button class="form__button" type="submit">Сохранить</button>
