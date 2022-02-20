@@ -1,9 +1,9 @@
 .profile__info {
   display: flex;
   flex-wrap: wrap;
-  max-width: 282px;
   margin: 0 auto;
   margin-bottom: 33px;
+  justify-content: center;
 }
 
 @media all and (min-width: 768px) {
@@ -11,5 +11,6 @@
     max-width: 336px;
     margin: 0;
     margin-left: 30px;
+    justify-content: left;
   }
 }

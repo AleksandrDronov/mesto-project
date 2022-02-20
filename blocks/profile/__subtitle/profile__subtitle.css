@@ -7,7 +7,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 158px;
+  width: 158px;
+  flex-basis: 200px;
 }
 
 @media all and (min-width: 768px) {
@@ -18,5 +19,6 @@
     margin: 0;
     margin-bottom: 14px;
     max-width: 220px;
+    flex-basis: 220px;
   }
 }

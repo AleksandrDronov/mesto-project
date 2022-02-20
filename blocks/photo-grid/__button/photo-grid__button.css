@@ -16,6 +16,3 @@
   opacity: .5;
 }
 
-.photo-grid__button:active {
-  background-image: url(../../../images/heart_black.svg);
-}
