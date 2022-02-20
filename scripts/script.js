@@ -7,52 +7,10 @@ const popupFullPic = page.querySelector('.popup_type_full-pic');
 const addPicOpenButton = page.querySelector('.profile__add-button');
 const addPicCloseButton = popupAddPic.querySelector('.popup__toggle');
 const addFullPicCloseButton = popupFullPic.querySelector('.popup__toggle');
-
-
-
 const profileForm =  page.querySelector('.form');
 const addPicForm =  popupAddPic.querySelector('.form');
-
-
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-};
-
-function closePopup(popup) {
-  popup.classList.remove('popup_opened');
-  nameInput.value = page.querySelector('.profile__title').textContent;
-  jobInput.value = page.querySelector('.profile__subtitle').textContent;
-};
-
-//попап профиля
-profileOpenButton.addEventListener('click', () => {
-  openPopup(popupProfile);
-});
-popupCloseButton.addEventListener('click', () => {
-  closePopup(popupProfile);
-});
-
-// попап добавления картинки
-addPicOpenButton.addEventListener('click', () => {
-  openPopup(popupAddPic);
-});
-addPicCloseButton.addEventListener('click', () => {
-  closePopup(popupAddPic);
-});
-
-
-//submit профиля
-const nameInput = profileForm.querySelector('.form__item_name');
-const jobInput = profileForm.querySelector('.form__item_job');
-
-function formSubmitHandler(evt) {
-  evt.preventDefault();
-  page.querySelector('.profile__title').textContent = nameInput.value;
-  page.querySelector('.profile__subtitle').textContent = jobInput.value;
-  closePopup(popupProfile);
-}
-
-profileForm.addEventListener('submit', formSubmitHandler);
+const profileTitle = page.querySelector('.profile__title');
+const profileSubtitle = page.querySelector('.profile__subtitle');
 
 //карточки
 const initialCards = [
@@ -82,34 +40,80 @@ const initialCards = [
   }
   ];
 
-  const cardsList = page.querySelector('.photo-grid__list');
-  const cardTemplate = page.querySelector('.card-template').content;
+function openPopup(popup) {
+  popup.classList.add('popup_opened');
+};
 
-  initialCards.forEach((item) => {
-    const cardElement = cardTemplate.cloneNode(true);
+function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+};
 
-    cardElement.querySelector('.photo-grid__image').src = item.link;
-    cardElement.querySelector('.photo-grid__image').alt = item.name;
-    cardElement.querySelector('.photo-grid__title').textContent = item.name;
+//попап профиля
+profileOpenButton.addEventListener('click', () => {
+  openPopup(popupProfile);
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileSubtitle.textContent;
+});
+popupCloseButton.addEventListener('click', () => {
+  closePopup(popupProfile);
+});
 
-    cardsList.append(cardElement);
-  });
+// попап добавления картинки
+addPicOpenButton.addEventListener('click', () => {
+  openPopup(popupAddPic);
 
-// submit каточки
+});
+addPicCloseButton.addEventListener('click', () => {
+  closePopup(popupAddPic);
+});
 
+//submit профиля
+const nameInput = profileForm.querySelector('.form__item_name');
+const jobInput = profileForm.querySelector('.form__item_job');
 
+function submitProfileForm(evt) {
+  evt.preventDefault();
+  profileTitle.textContent = nameInput.value;
+  profileSubtitle.textContent = jobInput.value;
+  closePopup(popupProfile);
+}
+
+profileForm.addEventListener('submit', submitProfileForm);
+
+//карточки из "коробки"
+const cardsList = page.querySelector('.photo-grid__list');
+const cardTemplate = page.querySelector('.card-template').content;
+
+function renderCard(card, container) {
+  container.prepend(card);
+}
+
+// функция создания карточки
+function createCard(cardName, cardUrl) {
+  const cardElement = cardTemplate.cloneNode(true);
+
+  cardElement.querySelector('.photo-grid__image').src = cardUrl;
+  cardElement.querySelector('.photo-grid__image').alt = cardName;
+  cardElement.querySelector('.photo-grid__title').textContent = cardName;
+
+  return cardElement;
+};
+
+initialCards.forEach((item) => {
+  const card = createCard(item.name, item.link);
+  renderCard(card, cardsList);
+});
+
+// submit карточки
 function addPicFormSubmit(evt) {
   evt.preventDefault();
   const placeInput = addPicForm.querySelector('.form__item_place');
   const urlInput = addPicForm.querySelector('.form__item_url');
-  const cardElement = cardTemplate.cloneNode(true);
+
+  const cardElement = createCard(placeInput.value, urlInput.value);
+
   const likeButton = cardElement.querySelector('.photo-grid__button');
   const trashButton = cardElement.querySelector('.photo-grid__trash');
-
-  cardElement.querySelector('.photo-grid__image').src = urlInput.value;
-  cardElement.querySelector('.photo-grid__image').alt = placeInput.value;
-  cardElement.querySelector('.photo-grid__title').textContent = placeInput.value;
-
   const image = cardElement.querySelector('.photo-grid__image');
 
   likeButton.addEventListener('click', () => {
@@ -127,9 +131,10 @@ function addPicFormSubmit(evt) {
     popupFullPic.querySelector('.popup__title').textContent = image.alt;
   });
 
-  cardsList.prepend(cardElement);
+  renderCard(cardElement, cardsList);
 
-  popupAddPic.classList.remove('popup_opened');
+  closePopup(popupAddPic);
+
   placeInput.value = '';
   urlInput.value = '';
 };
