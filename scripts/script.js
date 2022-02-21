@@ -96,22 +96,6 @@ function createCard(cardName, cardUrl) {
   cardElement.querySelector('.photo-grid__image').alt = cardName;
   cardElement.querySelector('.photo-grid__title').textContent = cardName;
 
-  return cardElement;
-};
-
-initialCards.forEach((item) => {
-  const card = createCard(item.name, item.link);
-  renderCard(card, cardsList);
-});
-
-// submit карточки
-function addPicFormSubmit(evt) {
-  evt.preventDefault();
-  const placeInput = addPicForm.querySelector('.form__item_place');
-  const urlInput = addPicForm.querySelector('.form__item_url');
-
-  const cardElement = createCard(placeInput.value, urlInput.value);
-
   const likeButton = cardElement.querySelector('.photo-grid__button');
   const trashButton = cardElement.querySelector('.photo-grid__trash');
   const image = cardElement.querySelector('.photo-grid__image');
@@ -131,6 +115,22 @@ function addPicFormSubmit(evt) {
     popupFullPic.querySelector('.popup__title').textContent = image.alt;
   });
 
+  return cardElement;
+};
+
+initialCards.forEach((item) => {
+  const card = createCard(item.name, item.link);
+  renderCard(card, cardsList);
+});
+
+// submit карточки
+function addPicFormSubmit(evt) {
+  evt.preventDefault();
+  const placeInput = addPicForm.querySelector('.form__item_place');
+  const urlInput = addPicForm.querySelector('.form__item_url');
+
+  const cardElement = createCard(placeInput.value, urlInput.value);
+
   renderCard(cardElement, cardsList);
 
   closePopup(popupAddPic);
@@ -141,34 +141,6 @@ function addPicFormSubmit(evt) {
 
 addPicForm.addEventListener('submit', addPicFormSubmit);
 
-// лайки
-const likeButton = document.querySelectorAll('.photo-grid__button');
-likeButton.forEach((item) => {
-  item.addEventListener('click', () => {
-    item.classList.toggle('photo-grid__button_active');
-  });
-});
-
-
-// удаление карточки
-const trashButton = document.querySelectorAll('.photo-grid__trash');
-trashButton.forEach((item) => {
-  item.addEventListener('click', () => {
-    const listItem = item.closest('.photo-grid__card');
-    listItem.remove();
-  });
-});
-
-//открытие карточки
-const cardsImages = document.querySelectorAll('.photo-grid__image');
-cardsImages.forEach((item) => {
-  item.addEventListener('click', () => {
-    openPopup(popupFullPic);
-    popupFullPic.querySelector('.popup__image').src = item.src;
-    popupFullPic.querySelector('.popup__image').alt = item.alt;
-    popupFullPic.querySelector('.popup__title').textContent = item.alt;
-  });
-});
 
 //закрытие карточки
 addFullPicCloseButton.addEventListener('click', () => {
