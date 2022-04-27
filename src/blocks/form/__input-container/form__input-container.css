@@ -8,6 +8,6 @@
 @media all and (max-width: 768px) {
   .form__input-container {
     max-width: 238px;
-    padding: 75px 0 42px;
+    padding: 75px 0 5px;
   }
 }

@@ -74,14 +74,6 @@ popupProfile.addEventListener('click', (evt) => {
   };
 });
 
-document.addEventListener('keydown', (evt) => {
-  if(evt.key === 'Escape') {
-    closePopup(popupProfile);
-    closePopup(popupAddPic);
-    closePopup(popupFullPic);
-  };
-});
-
 // попап добавления картинки
 addPicOpenButton.addEventListener('click', () => {
   openPopup(popupAddPic);
