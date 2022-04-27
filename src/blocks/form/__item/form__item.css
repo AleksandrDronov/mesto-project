@@ -5,7 +5,7 @@
   box-sizing: border-box;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
   background-color: transparent;
-  margin: 0;
+  margin: 0 0 2px;
   padding: 0;
   padding-bottom: 13px;
   font-size: 14px;
@@ -15,6 +15,19 @@
   line-height: 17px;
 }
 
-.form__item:nth-of-type(1) {
-  margin-bottom: 27px;
+
+.form__item::placeholder {
+  color: #C4C4C4;
+}
+
+.form__item::-webkit-input-placeholder {
+  color: #C4C4C4;
+}
+
+.form__item::-moz-placeholder {
+  color: #C4C4C4;
+}
+
+.form__item::-ms-input-placeholder {
+  color: #C4C4C4;
 }
