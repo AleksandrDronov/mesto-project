@@ -4,15 +4,16 @@ import { openPopup } from "./utils.js";
 
 // функция создания карточки
 export function createCard(cardName, cardUrl) {
+
   const cardElement = cardTemplate.cloneNode(true);
-
-  cardElement.querySelector('.photo-grid__image').src = cardUrl;
-  cardElement.querySelector('.photo-grid__image').alt = cardName;
-  cardElement.querySelector('.photo-grid__title').textContent = cardName;
-
+  const cardImage = cardElement.querySelector('.photo-grid__image');
+  const cardTitle = cardElement.querySelector('.photo-grid__title');
   const likeButton = cardElement.querySelector('.photo-grid__button');
   const trashButton = cardElement.querySelector('.photo-grid__trash');
-  const image = cardElement.querySelector('.photo-grid__image');
+
+  cardImage.src = cardUrl;
+  cardImage.alt = cardName;
+  cardTitle.textContent = cardName;
 
   likeButton.addEventListener('click', () => {
     likeButton.classList.toggle('photo-grid__button_active');
@@ -22,11 +23,11 @@ export function createCard(cardName, cardUrl) {
     listItem.remove();
   });
 
-  cardElement.querySelector('.photo-grid__image').addEventListener('click', () => {
+  cardImage.addEventListener('click', () => {
     openPopup(popupFullPic);
-    popupFullPic.querySelector('.popup__image').src = image.src;
-    popupFullPic.querySelector('.popup__image').alt = image.alt;
-    popupFullPic.querySelector('.popup__title').textContent = image.alt;
+    popupFullPic.querySelector('.popup__image').src = cardImage.src;
+    popupFullPic.querySelector('.popup__image').alt = cardImage.alt;
+    popupFullPic.querySelector('.popup__title').textContent = cardImage.alt;
   });
 
   return cardElement;
