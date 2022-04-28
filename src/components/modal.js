@@ -1,28 +1,23 @@
-import { profileTitle, profileSubtitle, popupProfile, popupAddPic, addPicForm, nameInput, jobInput, cardsList } from "./index.js";
-import { closePopup } from "./utils.js";
-import { renderCard, createCard } from "./cards.js";
 
-
-//submit профиля
-export function submitProfileForm(evt) {
-  evt.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileSubtitle.textContent = jobInput.value;
-  closePopup(popupProfile);
+function closePopupEsc(evt) {
+  if(evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  };
 };
 
-// submit карточки
-export function addPicFormSubmit(evt) {
-  evt.preventDefault();
-  const placeInput = addPicForm.elements.place;
-  const urlInput = addPicForm.elements.url;
-
-  const cardElement = createCard(placeInput.value, urlInput.value);
-
-  renderCard(cardElement, cardsList);
-
-  closePopup(popupAddPic);
-
-  placeInput.value = '';
-  urlInput.value = '';
+export function openPopup(popup) {
+  popup.classList.add('popup_opened');
+  document.addEventListener('keydown', closePopupEsc);
 };
+
+export function closePopup(popup) {
+  popup.classList.remove('popup_opened');
+  document.removeEventListener('keydown', closePopupEsc);
+};
+
+export function closePopupOverlay(evt, popup) {
+  if(evt.target.classList.contains('popup') || evt.target.classList.contains('popup__toggle')) {
+    closePopup(popup);
+  };
+}

@@ -1,6 +1,15 @@
-import { cardTemplate, popupFullPic } from "./index.js";
-import { openPopup } from "./utils.js";
+import { cardTemplate, popupFullPic } from "./utils.js";
+import { openPopup } from "./modal.js";
 
+
+function like(button, elementClass) {
+  button.classList.toggle(elementClass);
+};
+
+function deleteCard(button, elementClass) {
+  const listItem = button.closest(elementClass);
+    listItem.remove();
+};
 
 // функция создания карточки
 export function createCard(cardName, cardUrl) {
@@ -10,24 +19,26 @@ export function createCard(cardName, cardUrl) {
   const cardTitle = cardElement.querySelector('.photo-grid__title');
   const likeButton = cardElement.querySelector('.photo-grid__button');
   const trashButton = cardElement.querySelector('.photo-grid__trash');
+  const popupImage = popupFullPic.querySelector('.popup__image');
+  const popupTitle = popupFullPic.querySelector('.popup__title');
+
 
   cardImage.src = cardUrl;
   cardImage.alt = cardName;
   cardTitle.textContent = cardName;
 
   likeButton.addEventListener('click', () => {
-    likeButton.classList.toggle('photo-grid__button_active');
+    like(likeButton,'photo-grid__button_active');
   });
   trashButton.addEventListener('click', () => {
-    const listItem = trashButton.closest('.photo-grid__card');
-    listItem.remove();
+    deleteCard(trashButton,'.photo-grid__card')
   });
 
   cardImage.addEventListener('click', () => {
     openPopup(popupFullPic);
-    popupFullPic.querySelector('.popup__image').src = cardImage.src;
-    popupFullPic.querySelector('.popup__image').alt = cardImage.alt;
-    popupFullPic.querySelector('.popup__title').textContent = cardImage.alt;
+    popupImage.src = cardImage.src;
+    popupImage.alt = cardImage.alt;
+    popupTitle.textContent = cardImage.alt;
   });
 
   return cardElement;
