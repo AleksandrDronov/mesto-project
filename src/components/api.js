@@ -7,16 +7,18 @@ const config = {
   }
 };
 
+export function getResponseData(res) {
+  if(res.ok) {
+    return res.json();
+  };
+  return Promise.reject(`Ошибка: ${res.status}`);
+} ;
+
 export const getProfileInfo = new Promise((resolve, reject) => {
   fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(getResponseData)
     .then((result) => {
       resolve(result);
     })
@@ -30,12 +32,7 @@ export const getCards = new Promise((resolve, reject) => {
   fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(getResponseData)
     .then((result) => {
       resolve(result);
     })
@@ -44,6 +41,7 @@ export const getCards = new Promise((resolve, reject) => {
       reject();
     });
 });
+
 
 export function saveProfileInfo(nameInput, jobInput) {
   return fetch(`${config.baseUrl}/users/me`, {
@@ -67,7 +65,7 @@ export function saveNewCard(name, link) {
   });
 };
 
-export function deleteCard(idCard, cardElement) {
+export function deleteCard(idCard) {
   return fetch(`${config.baseUrl}/cards/${idCard}`, {
     method: 'DELETE',
     headers: config.headers
@@ -75,14 +73,14 @@ export function deleteCard(idCard, cardElement) {
 };
 
 
-export function addLikeCard (idCard, likeCount) {
+export function addLikeCard (idCard) {
   return fetch(`${config.baseUrl}/cards/likes/${idCard}`, {
     method: 'PUT',
     headers: config.headers
   })
 };
 
-export function removeLikeCard (idCard, likeCount) {
+export function removeLikeCard (idCard) {
   return fetch(`${config.baseUrl}/cards/likes/${idCard}`, {
     method: 'DELETE',
     headers: config.headers

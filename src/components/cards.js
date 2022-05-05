@@ -1,33 +1,34 @@
 import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./utils.js";
 import { openPopup, closePopup } from "./modal.js";
-import { deleteCard, addLikeCard, removeLikeCard } from "./api.js"
+import { getResponseData, deleteCard, addLikeCard, removeLikeCard } from "./api.js"
 
 //функция лайка
+function likeCardElement(data, likeCount, likeButton) {
+  likeCount.textContent = data.likes.length;
+  likeButton.classList.toggle('photo-grid__button_active');
+};
+
+function checkMyLike(myId, likes) {
+  return likes.some((like) => {
+    return like._id === myId;
+  });
+};
+
 function likeCard(idCard, likeCount, likeButton) {
   if(!likeButton.classList.contains('photo-grid__button_active')) {
-    addLikeCard(idCard, likeCount)
-      .then((res) => {
-        if(res.ok) {
-          return res.json()
-        };
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
+    addLikeCard(idCard)
+      .then(getResponseData)
       .then((result) => {
-        likeCount.textContent = result.likes.length;
+        likeCardElement(result, likeCount, likeButton);
       })
       .catch((err) => {
         console.log(err);
       });
   } else {
-    removeLikeCard(idCard, likeCount)
-      .then((res) => {
-        if(res.ok) {
-          return res.json()
-        };
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
+    removeLikeCard(idCard)
+      .then(getResponseData)
       .then((result) => {
-        likeCount.textContent = result.likes.length;
+        likeCardElement(result, likeCount, likeButton);
       })
       .catch((err) => {
         console.log(err);
@@ -36,17 +37,16 @@ function likeCard(idCard, likeCount, likeButton) {
 };
 
 //функция удаления карточки
+function deleteCardElement(cardElement) {
+  cardElement.remove();
+};
+
 function delCard (idCard, cardElement) {
   delPicButton.addEventListener('click', () => {
-    deleteCard(idCard, cardElement)
-      .then((res) => {
-        if(res.ok) {
-          return res.json()
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
-      })
+    deleteCard(idCard)
+      .then(getResponseData)
       .then(() => {
-        cardElement.remove();
+        deleteCardElement(cardElement);
       })
       .catch((err) => {
         console.log(err);
@@ -56,7 +56,7 @@ function delCard (idCard, cardElement) {
 };
 
 // функция создания карточки
-export function createCard(cardName, cardUrl, ownerId, myId, idCard, likesCard) {
+export function createCard(cardName, cardUrl, ownerId, myId, idCard, likesCard, likes) {
 
   const cardElement = cardTemplate.querySelector('.photo-grid__card').cloneNode(true);
   const cardImage = cardElement.querySelector('.photo-grid__image');
@@ -82,9 +82,12 @@ export function createCard(cardName, cardUrl, ownerId, myId, idCard, likesCard) 
     });
   };
 
+  if(checkMyLike(myId, likes)) {
+    likeButton.classList.toggle('photo-grid__button_active');
+  };
+
   likeButton.addEventListener('click', () => {
     likeCard(idCard, likeCount, likeButton);
-    likeButton.classList.toggle('photo-grid__button_active');
   });
 
   cardImage.addEventListener('click', () => {

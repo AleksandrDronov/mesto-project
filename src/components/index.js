@@ -1,6 +1,6 @@
 import '../pages/index.css'; // добавьте импорт главного файла сти лей
 
-import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar } from './api.js';
+import { getResponseData, getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar } from './api.js';
 import { profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
   addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, cardsList, addPicForm,
   avatarImage, avatarInput, profileAvatar, settings } from './utils.js';
@@ -8,17 +8,21 @@ import { openPopup, closePopup, closePopupOverlay } from './modal.js';
 import { createCard, renderCard } from './cards.js';
 import { toggleButtonState, enableValidation } from './validate.js';
 
+
 Promise.all([getProfileInfo, getCards])
   .then(([profileInfo, cards]) => {
-      profileTitle.textContent = profileInfo.name;
-      profileSubtitle.textContent = profileInfo.about;
-      profileAvatar.src = profileInfo.avatar;
-      let userId = profileInfo._id;
-      cards.reverse().forEach((item) => {
-        const card = createCard(item.name, item.link, item.owner._id, userId, item._id, item.likes.length);
-        renderCard(card, cardsList);
-      });
+    profileTitle.textContent = profileInfo.name;
+    profileSubtitle.textContent = profileInfo.about;
+    profileAvatar.src = profileInfo.avatar;
+    const userId = profileInfo._id;
+    cards.reverse().forEach((item) => {
+      const card = createCard(item.name, item.link, item.owner._id, userId, item._id, item.likes.length, item.likes);
+      renderCard(card, cardsList);
+    })
+  .catch(([err1, err2]) => {
+    console.log(err1, err2);
   });
+});
 
 //попап профиля
 profileOpenButton.addEventListener('click', () => {
@@ -66,24 +70,18 @@ function submitProfileForm(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveProfileInfo(nameInput, jobInput)
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(getResponseData)
     .then((result) => {
       profileTitle.textContent = result.name;
       profileSubtitle.textContent = result.about;
+      closePopup(popupProfile);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
       submitButton.textContent = nameButton;
-    })
-
-  closePopup(popupProfile);
+    });
 };
 
 profileForm.addEventListener('submit', submitProfileForm);
@@ -97,23 +95,17 @@ function submitAvatarForm(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveAvatar(avatarInput)
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(getResponseData)
     .then((result) => {
       avatarImage.src = result.avatar;
+      closePopup(popupAddAva);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
       submitButton.textContent = nameButton;
-    })
-
-  closePopup(popupAddAva);
+    });
 };
 
 popupAddAva.addEventListener('submit', submitAvatarForm);
@@ -131,15 +123,17 @@ function addPicFormSubmit(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveNewCard(placeInput, urlInput)
-    .then((res) => {
-      if(res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(getResponseData)
     .then((result) => {
-      const cardElement = createCard(result.name, result.link, result.owner._id, result.owner._id, result._id, result.likes.length);
+      const cardElement = createCard(result.name, result.link, result.owner._id, result.owner._id, result._id, result.likes.length, result.likes);
       renderCard(cardElement, cardsList);
+      closePopup(popupAddPic);
+
+      placeInput.value = '';
+      urlInput.value = '';
+
+      const inputList = Array.from(addPicForm.querySelectorAll('.form__item'));
+      toggleButtonState(inputList, submitButton, settings);
     })
     .catch((err) => {
       console.log(err);
@@ -147,15 +141,6 @@ function addPicFormSubmit(evt) {
     .finally(() => {
       submitButton.textContent = nameButton;
     })
-
-  closePopup(popupAddPic);
-
-  placeInput.value = '';
-  urlInput.value = '';
-
-  const inputList = Array.from(addPicForm.querySelectorAll('.form__item'));
-
-  toggleButtonState(inputList, submitButton, settings);
 };
 
 addPicForm.addEventListener('submit', addPicFormSubmit);
