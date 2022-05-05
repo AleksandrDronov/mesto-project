@@ -1,37 +1,90 @@
-import { cardTemplate, popupFullPic } from "./utils.js";
-import { openPopup } from "./modal.js";
+import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./utils.js";
+import { openPopup, closePopup } from "./modal.js";
+import { deleteCard, addLikeCard, removeLikeCard } from "./api.js"
 
-
-function like(button, elementClass) {
-  button.classList.toggle(elementClass);
+//функция лайка
+function likeCard(idCard, likeCount, likeButton) {
+  if(!likeButton.classList.contains('photo-grid__button_active')) {
+    addLikeCard(idCard, likeCount)
+      .then((res) => {
+        if(res.ok) {
+          return res.json()
+        };
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .then((result) => {
+        likeCount.textContent = result.likes.length;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    removeLikeCard(idCard, likeCount)
+      .then((res) => {
+        if(res.ok) {
+          return res.json()
+        };
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .then((result) => {
+        likeCount.textContent = result.likes.length;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 };
 
-function deleteCard(button, elementClass) {
-  const listItem = button.closest(elementClass);
-    listItem.remove();
+//функция удаления карточки
+function delCard (idCard, cardElement) {
+  delPicButton.addEventListener('click', () => {
+    deleteCard(idCard, cardElement)
+      .then((res) => {
+        if(res.ok) {
+          return res.json()
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .then(() => {
+        cardElement.remove();
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+    closePopup(popupDelPic);
+  });
 };
 
 // функция создания карточки
-export function createCard(cardName, cardUrl) {
+export function createCard(cardName, cardUrl, ownerId, myId, idCard, likesCard) {
 
-  const cardElement = cardTemplate.cloneNode(true);
+  const cardElement = cardTemplate.querySelector('.photo-grid__card').cloneNode(true);
   const cardImage = cardElement.querySelector('.photo-grid__image');
   const cardTitle = cardElement.querySelector('.photo-grid__title');
   const likeButton = cardElement.querySelector('.photo-grid__button');
   const trashButton = cardElement.querySelector('.photo-grid__trash');
+  const likeCount = cardElement.querySelector('.photo-grid__like');
+
   const popupImage = popupFullPic.querySelector('.popup__image');
   const popupTitle = popupFullPic.querySelector('.popup__title');
-
 
   cardImage.src = cardUrl;
   cardImage.alt = cardName;
   cardTitle.textContent = cardName;
+  likeCount.textContent = likesCard;
+
+  if(ownerId !== myId) {
+    trashButton.classList.add('photo-grid__trash_inactive')
+  } else {
+    trashButton.addEventListener('click', () => {
+      openPopup(popupDelPic);
+      delCard(idCard, cardElement);
+    });
+  };
 
   likeButton.addEventListener('click', () => {
-    like(likeButton,'photo-grid__button_active');
-  });
-  trashButton.addEventListener('click', () => {
-    deleteCard(trashButton,'.photo-grid__card')
+    likeCard(idCard, likeCount, likeButton);
+    likeButton.classList.toggle('photo-grid__button_active');
   });
 
   cardImage.addEventListener('click', () => {

@@ -1,50 +1,29 @@
+
 const page = document.querySelector('.page');
 const profileOpenButton = page.querySelector('.profile__toggle');
-const popupCloseButton = page.querySelector('.popup__toggle');
+const avatarOpenButton = page.querySelector('.profile__avatar-container');
 const popupProfile = page.querySelector('.popup_type_profile');
 const popupAddPic = page.querySelector('.popup_type_add-pic');
 const popupFullPic = page.querySelector('.popup_type_full-pic');
+const popupDelPic = page.querySelector('.popup_type_delete-pic');
+const popupAddAva = page.querySelector('.popup_type_add-avatar');
 const addPicOpenButton = page.querySelector('.profile__add-button');
-const addPicCloseButton = popupAddPic.querySelector('.popup__toggle');
-const addFullPicCloseButton = popupFullPic.querySelector('.popup__toggle');
 const profileForm =  document.forms.profile;
 const addPicForm =  document.forms.card;
+const addAvatarForm =  document.forms.avatar;
 const profileTitle = page.querySelector('.profile__title');
 const profileSubtitle = page.querySelector('.profile__subtitle');
+const profileAvatar = page.querySelector('.profile__avatar');
 const nameInput = profileForm.elements.name;
 const jobInput = profileForm.elements.job;
+const avatarInput = addAvatarForm.elements.url;
 const cardsList = page.querySelector('.photo-grid__list');
 const cardTemplate = page.querySelector('.card-template').content;
+const delPicButton = page.querySelector('.form__button_small');
+const avatarImage = page.querySelector('.profile__avatar');
+const allFormButtons = page.querySelectorAll('.form__button');
 
-//карточки
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-  ];
-
-  //валидация
+  //для валидация
 const settings = {
   formSelector: '.form',
   inputSelector: '.form__item',
@@ -57,21 +36,24 @@ const settings = {
 
 export { page,
   profileOpenButton,
-  popupCloseButton,
+  avatarOpenButton,
   popupProfile,
   popupAddPic,
   popupFullPic,
+  popupDelPic,
+  popupAddAva,
   addPicOpenButton,
-  addPicCloseButton,
-  addFullPicCloseButton,
   profileForm,
   addPicForm,
   profileTitle,
   profileSubtitle,
+  profileAvatar,
   nameInput,
   jobInput,
   cardsList,
   cardTemplate,
-  initialCards,
-  settings
+  settings,
+  delPicButton,
+  avatarImage,
+  avatarInput,
 };

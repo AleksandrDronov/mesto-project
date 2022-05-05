@@ -4,6 +4,8 @@
   padding-top: 42px;
   max-width: 880px;
   margin: 0 auto;
+  position: relative;
+
 }
 
 @media all and (min-width: 768px) {

@@ -2,7 +2,17 @@
   width: 120px;
   height: 120px;
   border-radius: 80px;
-  margin: 0 auto;
+  object-fit: cover;
+  transition: 0.5s;
+}
+
+.profile__avatar:hover {
+  opacity: .2;
+  cursor: pointer;
+}
+
+.profile__avatar:hover + .profile__icon {
+  display: block;
 }
 
 @media all and (min-width: 768px) {
