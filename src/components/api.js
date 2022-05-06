@@ -14,33 +14,19 @@ export function getResponseData(res) {
   return Promise.reject(`Ошибка: ${res.status}`);
 } ;
 
-export const getProfileInfo = new Promise((resolve, reject) => {
-  fetch(`${config.baseUrl}/users/me`, {
+export function getProfileInfo() {
+  return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
     .then(getResponseData)
-    .then((result) => {
-      resolve(result);
-    })
-    .catch((err) => {
-      console.log(err)
-      reject();
-    });
-});
+};
 
-export const getCards = new Promise((resolve, reject) => {
-  fetch(`${config.baseUrl}/cards`, {
+export function getCards() {
+  return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
     .then(getResponseData)
-    .then((result) => {
-      resolve(result);
-    })
-    .catch((err) => {
-      console.log(err);
-      reject();
-    });
-});
+};
 
 
 export function saveProfileInfo(nameInput, jobInput) {
@@ -51,7 +37,8 @@ export function saveProfileInfo(nameInput, jobInput) {
       name: nameInput.value,
       about: jobInput.value
     })
-  });
+  })
+    .then(getResponseData)
 };
 
 export function saveNewCard(name, link) {
@@ -62,14 +49,16 @@ export function saveNewCard(name, link) {
       name: name.value,
       link: link.value
     })
-  });
+  })
+    .then(getResponseData)
 };
 
 export function deleteCard(idCard) {
   return fetch(`${config.baseUrl}/cards/${idCard}`, {
     method: 'DELETE',
     headers: config.headers
-  });
+  })
+    .then(getResponseData)
 };
 
 
@@ -78,6 +67,7 @@ export function addLikeCard (idCard) {
     method: 'PUT',
     headers: config.headers
   })
+    .then(getResponseData)
 };
 
 export function removeLikeCard (idCard) {
@@ -85,6 +75,7 @@ export function removeLikeCard (idCard) {
     method: 'DELETE',
     headers: config.headers
   })
+    .then(getResponseData)
 };
 
 export function saveAvatar(avatarInput) {
@@ -94,5 +85,6 @@ export function saveAvatar(avatarInput) {
     body: JSON.stringify({
       avatar: avatarInput.value,
     })
-  });
+  })
+    .then(getResponseData)
 };

@@ -17,7 +17,6 @@ function checkMyLike(myId, likes) {
 function likeCard(idCard, likeCount, likeButton) {
   if(!likeButton.classList.contains('photo-grid__button_active')) {
     addLikeCard(idCard)
-      .then(getResponseData)
       .then((result) => {
         likeCardElement(result, likeCount, likeButton);
       })
@@ -26,7 +25,6 @@ function likeCard(idCard, likeCount, likeButton) {
       });
   } else {
     removeLikeCard(idCard)
-      .then(getResponseData)
       .then((result) => {
         likeCardElement(result, likeCount, likeButton);
       })
@@ -44,14 +42,13 @@ function deleteCardElement(cardElement) {
 function delCard (idCard, cardElement) {
   delPicButton.addEventListener('click', () => {
     deleteCard(idCard)
-      .then(getResponseData)
       .then(() => {
         deleteCardElement(cardElement);
+        closePopup(popupDelPic);
       })
       .catch((err) => {
         console.log(err);
     });
-    closePopup(popupDelPic);
   });
 };
 

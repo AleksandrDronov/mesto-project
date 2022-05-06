@@ -9,7 +9,8 @@ import { createCard, renderCard } from './cards.js';
 import { toggleButtonState, enableValidation } from './validate.js';
 
 
-Promise.all([getProfileInfo, getCards])
+
+Promise.all([getProfileInfo(), getCards()])
   .then(([profileInfo, cards]) => {
     profileTitle.textContent = profileInfo.name;
     profileSubtitle.textContent = profileInfo.about;
@@ -18,11 +19,12 @@ Promise.all([getProfileInfo, getCards])
     cards.reverse().forEach((item) => {
       const card = createCard(item.name, item.link, item.owner._id, userId, item._id, item.likes.length, item.likes);
       renderCard(card, cardsList);
-    })
-  .catch(([err1, err2]) => {
-    console.log(err1, err2);
+    });
+  })
+    .catch((err) => {
+      Sconsole.log(err);
   });
-});
+
 
 //попап профиля
 profileOpenButton.addEventListener('click', () => {
@@ -70,7 +72,6 @@ function submitProfileForm(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveProfileInfo(nameInput, jobInput)
-    .then(getResponseData)
     .then((result) => {
       profileTitle.textContent = result.name;
       profileSubtitle.textContent = result.about;
@@ -95,7 +96,6 @@ function submitAvatarForm(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveAvatar(avatarInput)
-    .then(getResponseData)
     .then((result) => {
       avatarImage.src = result.avatar;
       closePopup(popupAddAva);
@@ -123,7 +123,6 @@ function addPicFormSubmit(evt) {
   submitButton.textContent = 'Сохранение...';
 
   saveNewCard(placeInput, urlInput)
-    .then(getResponseData)
     .then((result) => {
       const cardElement = createCard(result.name, result.link, result.owner._id, result.owner._id, result._id, result.likes.length, result.likes);
       renderCard(cardElement, cardsList);
