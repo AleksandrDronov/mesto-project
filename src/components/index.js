@@ -22,7 +22,7 @@ Promise.all([getProfileInfo(), getCards()])
     });
   })
     .catch((err) => {
-      Sconsole.log(err);
+      console.log(err);
   });
 
 
