@@ -1,9 +1,9 @@
 import '../pages/index.css'; // добавьте импорт главного файла сти лей
 
-import { getResponseData, getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar } from './api.js';
+import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar } from './api.js';
 import { profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
   addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, cardsList, addPicForm,
-  avatarImage, avatarInput, profileAvatar, settings } from './utils.js';
+  avatarImage, avatarInput, profileAvatar, settings } from './constants.js';
 import { openPopup, closePopup, closePopupOverlay } from './modal.js';
 import { createCard, renderCard } from './cards.js';
 import { toggleButtonState, enableValidation } from './validate.js';

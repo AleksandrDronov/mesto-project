@@ -1,4 +1,4 @@
-import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./utils.js";
+import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./constants.js";
 import { openPopup, closePopup } from "./modal.js";
 import { getResponseData, deleteCard, addLikeCard, removeLikeCard } from "./api.js"
 
