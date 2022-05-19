@@ -1,6 +1,6 @@
 import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./constants.js";
 import { openPopup, closePopup } from "./modal.js";
-import {api} from "./api.js"
+import {api} from "./Api.js"
 
 //функция лайка
 /*function likeCardElement(data, likeCount, likeButton) {

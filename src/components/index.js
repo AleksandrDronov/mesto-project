@@ -1,13 +1,14 @@
 import '../pages/index.css'; // добавьте импорт главного файла сти лей
 
-import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar, api } from './api.js';
+import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar, api } from './Api.js';
 import { profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
   addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, cardsList, addPicForm,
   avatarImage, avatarInput, profileAvatar, settings } from './constants.js';
 import { openPopup, closePopup, closePopupOverlay } from './modal.js';
-import { createCard, renderCard } from './cards.js';
+import { createCard, renderCard } from './Card.js';
 import { toggleButtonState, enableValidation } from './validate.js';
-import Card from './cards.js';
+import Card from './Card.js';
+import FormValidator from './FormValidator';
 
 
 
@@ -148,6 +149,7 @@ function addPicFormSubmit(evt) {
 addPicForm.addEventListener('submit', addPicFormSubmit);
 
 //валидация
-enableValidation(settings);
+const validate = new FormValidator(settings, addPicForm);
+validate.enableValidation();
 
 
