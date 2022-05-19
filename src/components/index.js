@@ -1,24 +1,26 @@
 import '../pages/index.css'; // добавьте импорт главного файла сти лей
 
-import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar } from './api.js';
+import { getProfileInfo, getCards, saveProfileInfo, saveNewCard, saveAvatar, api } from './api.js';
 import { profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
   addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, cardsList, addPicForm,
   avatarImage, avatarInput, profileAvatar, settings } from './constants.js';
 import { openPopup, closePopup, closePopupOverlay } from './modal.js';
 import { createCard, renderCard } from './cards.js';
 import { toggleButtonState, enableValidation } from './validate.js';
+import Card from './cards.js';
 
 
 
-Promise.all([getProfileInfo(), getCards()])
+Promise.all([api.getProfileInfo(), api.getCards()])
   .then(([profileInfo, cards]) => {
     profileTitle.textContent = profileInfo.name;
     profileSubtitle.textContent = profileInfo.about;
     profileAvatar.src = profileInfo.avatar;
     const userId = profileInfo._id;
     cards.reverse().forEach((item) => {
-      const card = createCard(item.name, item.link, item.owner._id, userId, item._id, item.likes.length, item.likes);
-      renderCard(card, cardsList);
+      const card = new Card(item, userId, '.photo-grid__card');
+      const cardEl = card.createCard();
+      card.renderCard(cardEl, cardsList);
     });
   })
     .catch((err) => {
@@ -71,7 +73,7 @@ function submitProfileForm(evt) {
 
   submitButton.textContent = 'Сохранение...';
 
-  saveProfileInfo(nameInput, jobInput)
+  api.saveProfileInfo(nameInput, jobInput)
     .then((result) => {
       profileTitle.textContent = result.name;
       profileSubtitle.textContent = result.about;
@@ -95,7 +97,7 @@ function submitAvatarForm(evt) {
 
   submitButton.textContent = 'Сохранение...';
 
-  saveAvatar(avatarInput)
+  api.saveAvatar(avatarInput)
     .then((result) => {
       avatarImage.src = result.avatar;
       closePopup(popupAddAva);
@@ -122,10 +124,11 @@ function addPicFormSubmit(evt) {
 
   submitButton.textContent = 'Сохранение...';
 
-  saveNewCard(placeInput, urlInput)
+  api.saveNewCard(placeInput, urlInput)
     .then((result) => {
-      const cardElement = createCard(result.name, result.link, result.owner._id, result.owner._id, result._id, result.likes.length, result.likes);
-      renderCard(cardElement, cardsList);
+      const cardElement = new Card(result, result._id, '.photo-grid__card');
+      cardElement.createCard();
+      cardElement.renderCard(cardElement, cardsList);
       closePopup(popupAddPic);
 
       placeInput.value = '';

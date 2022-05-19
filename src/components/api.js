@@ -107,14 +107,14 @@ class Api {
     return fetch(`${this._url}/users/me`, {
       headers: this._headers
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   getCards() {
     return fetch(`${this._url}/cards`, {
       headers: this._headers
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   saveProfileInfo(nameInput, jobInput) {
@@ -126,7 +126,7 @@ class Api {
         about: jobInput.value
       })
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
       .then((result) => {
         profileTitle.textContent = result.name;
         profileSubtitle.textContent = result.about;
@@ -149,7 +149,7 @@ class Api {
         link: link.value
       })
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   deleteCard(idCard) {
@@ -157,7 +157,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   addLikeCard (idCard) {
@@ -165,7 +165,7 @@ class Api {
       method: 'PUT',
       headers: this._headers
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   removeLikeCard (idCard) {
@@ -173,7 +173,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 
   saveAvatar(avatarInput) {
@@ -184,14 +184,14 @@ class Api {
         avatar: avatarInput.value,
       })
     })
-      .then(this._getResponseData())
+      .then(this._getResponseData)
   }
 };
 
-const api = new Api({
-  baseUrl: 'https://nomoreparties.co/v1/cohort-42',
+export const api = new Api({
+  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-9',
   headers: {
-    authorization: 'c56e30dc-2883-4270-a59e-b2f7bae969c6',
+    authorization: '178f9d6a-33c6-4fd5-a1f0-54c79917b762',
     'Content-Type': 'application/json'
   }
 });
