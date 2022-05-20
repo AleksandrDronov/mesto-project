@@ -1,6 +1,3 @@
-import { settings } from './constants.js'
-
-
 
 export default class FormValidator {
   constructor(settings, form) {

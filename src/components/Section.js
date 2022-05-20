@@ -1,7 +1,6 @@
 export default class Section {
-  constructor ({items, userId, renderer}, selector){
+  constructor ({items, renderer}, selector){
     this._items = items;
-    this._userId = userId;
     this._renderer = renderer;
     this._selector = selector;
   }
@@ -13,7 +12,7 @@ renderCards() {
 }
 
 addItem(item) {
-  page.querySelector(this._selector).append(item);
+  document.querySelector(this._selector).append(item);
 }
 
 }

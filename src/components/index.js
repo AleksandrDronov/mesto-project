@@ -12,28 +12,43 @@ import Card from './Card.js';
 import FormValidator from './FormValidator.js';
 import Section from './Section.js';
 
-const cardsList = new Section({
-  items: api.getCards(),
-  userId: api.getProfileInfo(),
-  renderer: (item) => {
-    const card = new Card(item, userId, '.photo-grid__card');
-    const cardElement = card.createCard();
-    cardsList.addItem(cardElement);
-  }
-}, '.photo-grid__list');
 
-Promise.all([api.getProfileInfo(), /*api.getCards()*/])
+
+// const cardsList = new Section({
+//   items: api.getCards(),
+//   renderer: (item) => {
+//     const userId = api.getProfileInfo();
+//     const card = new Card(item, userId, '.photo-grid__card');
+//     const cardElement = card.createCard();
+//     cardsList.addItem(cardElement);
+//   }
+// }, '.photo-grid__list');
+
+// console.log(cardsList)
+// cardsList.renderCards();
+
+Promise.all([api.getProfileInfo(), api.getCards()])
   .then(([profileInfo, cards]) => {
     profileTitle.textContent = profileInfo.name;
     profileSubtitle.textContent = profileInfo.about;
     profileAvatar.src = profileInfo.avatar;
     const userId = profileInfo._id;
-   // cards.reverse().forEach((item) => {
-     // renderItem(item, userId);
-   // });
+    const cardsList = new Section({
+      items: cards,
+      renderer: (item) => {
+        const card = new Card(item, userId, '.photo-grid__card');
+        const cardElement = card.createCard();
+        cardsList.addItem(cardElement);
+      }
+    }, '.photo-grid__list')
+
+    cardsList.renderCards();
+
   })
+
   .catch((err) => {
     console.log(err);
+
   });
 
 
