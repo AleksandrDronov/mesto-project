@@ -3,29 +3,22 @@ import '../pages/index.css'; // добавьте импорт главного �
 import { api } from './Api.js';
 import {
   profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
-  addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, addPicForm,
+  addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, addPicForm, addAvatarForm,
   avatarImage, avatarInput, profileAvatar, settings
 } from './constants.js';
-import { openPopup, closePopup, closePopupOverlay } from './modal.js';
+// import { openPopup, closePopup, closePopupOverlay } from './modal.js';
 import { toggleButtonState } from './validate.js';
 import Card from './Card.js';
 import FormValidator from './FormValidator.js';
 import Section from './Section.js';
+import Popup from './Popup.js';
+import PopupWithImage from './PopupWithImage';
 
+const profilePopup = new Popup('.popup_type_profile');
+const avatarPopup = new Popup('.popup_type_add-avatar');
+const addPicPopup = new Popup('.popup_type_add-pic');
+const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
 
-
-// const cardsList = new Section({
-//   items: api.getCards(),
-//   renderer: (item) => {
-//     const userId = api.getProfileInfo();
-//     const card = new Card(item, userId, '.photo-grid__card');
-//     const cardElement = card.createCard();
-//     cardsList.addItem(cardElement);
-//   }
-// }, '.photo-grid__list');
-
-// console.log(cardsList)
-// cardsList.renderCards();
 
 Promise.all([api.getProfileInfo(), api.getCards()])
   .then(([profileInfo, cards]) => {
@@ -36,52 +29,45 @@ Promise.all([api.getProfileInfo(), api.getCards()])
     const cardsList = new Section({
       items: cards,
       renderer: (item) => {
-        const card = new Card(item, userId, '.photo-grid__card');
+        const card = new Card(item, userId, '.card-template', () => {
+          fullPicPopup.open(item)
+        });
         const cardElement = card.createCard();
         cardsList.addItem(cardElement);
       }
     }, '.photo-grid__list')
-
     cardsList.renderCards();
-
   })
-
   .catch((err) => {
     console.log(err);
-
   });
-
 
 //попап профиля
 profileOpenButton.addEventListener('click', () => {
-  openPopup(popupProfile);
+  profilePopup.open()
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileSubtitle.textContent;
 });
-popupProfile.addEventListener('click', (evt) => {
-  closePopupOverlay(evt, popupProfile);
-});
+
+profilePopup.setEventListeners();
 
 //попап аватара
 avatarOpenButton.addEventListener('click', () => {
-  openPopup(popupAddAva);
+  avatarPopup.open()
 });
-popupAddAva.addEventListener('click', (evt) => {
-  closePopupOverlay(evt, popupAddAva);
-});
+
+avatarPopup.setEventListeners();
+
 
 // попап добавления картинки
 addPicOpenButton.addEventListener('click', () => {
-  openPopup(popupAddPic);
-});
-popupAddPic.addEventListener('click', (evt) => {
-  closePopupOverlay(evt, popupAddPic);
+  addPicPopup.open()
 });
 
+addPicPopup.setEventListeners();
+
 //попап картинки
-popupFullPic.addEventListener('click', (evt) => {
-  closePopupOverlay(evt, popupFullPic);
-});
+fullPicPopup.setEventListeners()
 
 //попап подверждения удаления кратинки
 popupDelPic.addEventListener('click', (evt) => {
@@ -172,6 +158,10 @@ function addPicFormSubmit(evt) {
 addPicForm.addEventListener('submit', addPicFormSubmit);
 
 //валидация
+const validateProfile = new FormValidator(settings, profileForm);
+validateProfile.enableValidation();
+const validateAvatar = new FormValidator(settings, addAvatarForm);
+validateAvatar.enableValidation();
 const validate = new FormValidator(settings, addPicForm);
 validate.enableValidation();
 

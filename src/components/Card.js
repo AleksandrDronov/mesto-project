@@ -1,6 +1,7 @@
 import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./constants.js";
 import { openPopup, closePopup } from "./modal.js";
 import {api} from "./Api.js"
+import PopupWithImage from "./PopupWithImage.js";
 
 //функция лайка
 /*function likeCardElement(data, likeCount, likeButton) {
@@ -103,7 +104,7 @@ function delCard (idCard, cardElement) {
 }*/
 
 export default class Card {
-  constructor(card, userId, selector) {
+  constructor(card, userId, selector, handleCardClick) {
     this._cardName = card.name;
     this._cardUrl = card.link;
     this._ownerId = card.owner._id;
@@ -112,10 +113,17 @@ export default class Card {
     this._likesCard = card.likes.length;
     this._likes = card.likes;
     this._selector = selector;
+    this._handleCardClick = handleCardClick;
   }
 
   _getElement() {
-    return cardTemplate.querySelector(this._selector).cloneNode(true);
+    const cardElement = document
+      .querySelector(this._selector)
+      .content
+      .querySelector('.photo-grid__card')
+      .cloneNode(true);
+
+    return cardElement;
   }
 
   renderCard(card, container) {
@@ -135,9 +143,6 @@ export default class Card {
     const likeButton = this._element.querySelector('.photo-grid__button');
     const trashButton = this._element.querySelector('.photo-grid__trash');
     const likeCount = this._element.querySelector('.photo-grid__like');
-
-    const popupImage = popupFullPic.querySelector('.popup__image');
-    const popupTitle = popupFullPic.querySelector('.popup__title');
 
     cardImage.src = this._cardUrl;
     cardImage.alt = this._cardName;
@@ -162,10 +167,7 @@ export default class Card {
     });
 
     cardImage.addEventListener('click', () => {
-      openPopup(popupFullPic);
-      popupImage.src = cardImage.src;
-      popupImage.alt = cardImage.alt;
-      popupTitle.textContent = cardImage.alt;
+      this._handleCardClick()
     });
 
     return this._element;
@@ -202,7 +204,7 @@ export default class Card {
 
   _delCard() {
     delPicButton.addEventListener('click', () => {
-      deleteCard(this._idCard)
+      api.deleteCard(this._idCard)
         .then(() => {
           this._deleteCardElement();
           closePopup(popupDelPic);

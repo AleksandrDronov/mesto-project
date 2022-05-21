@@ -88,8 +88,6 @@
 //     .then(getResponseData)
 // };
 
-
-
 class Api {
   constructor(options) {
     this._url = options.baseUrl;
