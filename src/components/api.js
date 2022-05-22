@@ -101,7 +101,7 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getProfileInfo() {
+  getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       headers: this._headers
     })
@@ -115,36 +115,25 @@ class Api {
       .then(this._getResponseData)
   }
 
-  saveProfileInfo(nameInput, jobInput) {
+  saveProfileInfo(nameValue, jobValue) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        name: nameInput.value,
-        about: jobInput.value
+        name: nameValue,
+        about: jobValue
       })
     })
       .then(this._getResponseData)
-      .then((result) => {
-        profileTitle.textContent = result.name;
-        profileSubtitle.textContent = result.about;
-        closePopup(popupProfile);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        submitButton.textContent = nameButton;
-      });
   }
 
-  saveNewCard(name, link) {
+  saveNewCard(nameValue, linkValue) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        name: name.value,
-        link: link.value
+        name: nameValue,
+        link: linkValue
       })
     })
       .then(this._getResponseData)
@@ -174,12 +163,12 @@ class Api {
       .then(this._getResponseData)
   }
 
-  saveAvatar(avatarInput) {
+  saveAvatar(avatarValue) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        avatar: avatarInput.value,
+        avatar: avatarValue,
       })
     })
       .then(this._getResponseData)

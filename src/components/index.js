@@ -2,42 +2,125 @@ import '../pages/index.css'; // добавьте импорт главного �
 
 import { api } from './Api.js';
 import {
-  profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle, popupProfile,
-  addPicOpenButton, popupAddPic, popupFullPic, popupDelPic, popupAddAva, profileForm, addPicForm, addAvatarForm,
-  avatarImage, avatarInput, profileAvatar, settings
+  profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle,
+  addPicOpenButton, popupDelPic, profileForm, addPicForm, addAvatarForm, settings
 } from './constants.js';
-// import { openPopup, closePopup, closePopupOverlay } from './modal.js';
-import { toggleButtonState } from './validate.js';
 import Card from './Card.js';
 import FormValidator from './FormValidator.js';
 import Section from './Section.js';
-import Popup from './Popup.js';
-import PopupWithImage from './PopupWithImage';
+import PopupWithImage from './PopupWithImage.js';
+import PopupWithForm from './PopupWithForm.js';
+import UserInfo from './UserInfo';
 
 let userId;
 
-const profilePopup = new Popup('.popup_type_profile');
-const avatarPopup = new Popup('.popup_type_add-avatar');
-const addPicPopup = new Popup('.popup_type_add-pic');
-const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
+/*function handleCardClick(card) {
+  fullPicPopup.open(card);
+}*/
 
-function handleCardClick(name, link) {
-  fullPicPopup.open(name, link);
-}
+const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
 
 const cardsList = new Section({
   renderer: (card) => {
-    const newCard = new Card(card, userId, '.card-template', handleCardClick).createCard();
+    const newCard = new Card(card, userId, '.card-template', ()=>{
+      fullPicPopup.open(card);
+    }).createCard();
     return newCard;
   }
 }, '.photo-grid__list')
 
+//валидация
+const validateProfile = new FormValidator(settings, profileForm);
+validateProfile.enableValidation();
+const validateAvatar = new FormValidator(settings, addAvatarForm);
+validateAvatar.enableValidation();
+const validate = new FormValidator(settings, addPicForm);
+validate.enableValidation();
 
-Promise.all([api.getProfileInfo(), api.getCards()])
+const avatarPopup = new PopupWithForm('.popup_type_add-avatar',
+function handleSubmitForm(evt, input){
+  const submitButton = evt.submitter;
+  const nameButton = submitButton.textContent;
+
+  submitButton.textContent = 'Сохранение...';
+
+  api.saveAvatar(input.url)
+    .then((result) => {
+      user.setUserInfo(result);
+      avatarPopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      submitButton.textContent = nameButton;
+    });
+});
+
+avatarPopup.setEventListeners();
+
+
+
+const profilePopup = new PopupWithForm('.popup_type_profile',
+  function handleSubmitForm(evt, input) {
+    const submitButton = evt.submitter;
+    const nameButton = submitButton.textContent;
+
+    submitButton.textContent = 'Сохранение...';
+    api.saveProfileInfo(input.name, input.job)
+      .then((result) => {
+        user.setUserInfo(result);
+        profilePopup.close();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        submitButton.textContent = nameButton;
+      });
+  });
+
+  profilePopup.setEventListeners();
+
+const addPicPopup = new PopupWithForm('.popup_type_add-pic',
+function handleSubmitForm(evt, input){
+
+  const submitButton = evt.submitter;
+  const nameButton = submitButton.textContent;
+
+  submitButton.textContent = 'Сохранение...';
+
+  api.saveNewCard(input.place, input.url)
+    .then((result) => {
+      cardsList.addItem(result);
+      addPicPopup.close();
+
+      input.place = '';
+      input.url = '';
+
+      const inputList = Array.from(addPicForm.querySelectorAll('.form__item'));
+      validate.toggleButtonState(inputList, submitButton);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      submitButton.textContent = nameButton;
+    })
+});
+
+addPicPopup.setEventListeners();
+
+const user = new UserInfo({
+  profileTitle: '.profile__title',
+  profileSubtitle: '.profile__subtitle',
+  profileAvatar: '.profile__avatar'
+})
+
+
+Promise.all([api.getUserInfo(), api.getCards()])
   .then(([profileInfo, cards]) => {
-    profileTitle.textContent = profileInfo.name;
-    profileSubtitle.textContent = profileInfo.about;
-    profileAvatar.src = profileInfo.avatar;
+    user.setUserInfo(profileInfo);
     userId = profileInfo._id;
     cardsList.renderCards(cards);
   })
@@ -52,14 +135,13 @@ profileOpenButton.addEventListener('click', () => {
   jobInput.value = profileSubtitle.textContent;
 });
 
-profilePopup.setEventListeners();
+
 
 //попап аватара
 avatarOpenButton.addEventListener('click', () => {
   avatarPopup.open()
 });
 
-avatarPopup.setEventListeners();
 
 
 // попап добавления картинки
@@ -67,104 +149,8 @@ addPicOpenButton.addEventListener('click', () => {
   addPicPopup.open()
 });
 
-addPicPopup.setEventListeners();
-
-//попап картинки
-fullPicPopup.setEventListeners()
 
 //попап подверждения удаления кратинки
 popupDelPic.addEventListener('click', (evt) => {
   closePopupOverlay(evt, popupDelPic);
 });
-
-
-//submit профиля
-function submitProfileForm(evt) {
-  evt.preventDefault();
-  const submitButton = evt.submitter;
-  const nameButton = submitButton.textContent;
-
-  submitButton.textContent = 'Сохранение...';
-
-  api.saveProfileInfo(nameInput, jobInput)
-    .then((result) => {
-      profileTitle.textContent = result.name;
-      profileSubtitle.textContent = result.about;
-      closePopup(popupProfile);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      submitButton.textContent = nameButton;
-    });
-};
-
-profileForm.addEventListener('submit', submitProfileForm);
-
-//submit аватара
-function submitAvatarForm(evt) {
-  evt.preventDefault();
-  const submitButton = evt.submitter;
-  const nameButton = submitButton.textContent;
-
-  submitButton.textContent = 'Сохранение...';
-
-  api.saveAvatar(avatarInput)
-    .then((result) => {
-      avatarImage.src = result.avatar;
-      closePopup(popupAddAva);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      submitButton.textContent = nameButton;
-    });
-};
-
-popupAddAva.addEventListener('submit', submitAvatarForm);
-
-
-//submit карточки
-function addPicFormSubmit(evt) {
-  evt.preventDefault();
-
-  const placeInput = addPicForm.elements.place;
-  const urlInput = addPicForm.elements.url;
-  const submitButton = evt.submitter;
-  const nameButton = submitButton.textContent;
-
-  submitButton.textContent = 'Сохранение...';
-
-  api.saveNewCard(placeInput, urlInput)
-    .then((result) => {
-      console.log(result);
-      cardsList.addItem(result);
-      addPicPopup.close();
-
-      placeInput.value = '';
-      urlInput.value = '';
-
-      const inputList = Array.from(addPicForm.querySelectorAll('.form__item'));
-      toggleButtonState(inputList, submitButton, settings);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      submitButton.textContent = nameButton;
-    })
-};
-
-addPicForm.addEventListener('submit', addPicFormSubmit);
-
-//валидация
-const validateProfile = new FormValidator(settings, profileForm);
-validateProfile.enableValidation();
-const validateAvatar = new FormValidator(settings, addAvatarForm);
-validateAvatar.enableValidation();
-const validate = new FormValidator(settings, addPicForm);
-validate.enableValidation();
-
-
