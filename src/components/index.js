@@ -19,15 +19,26 @@ let userId;
 }*/
 
 const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
+fullPicPopup.setEventListeners()
 
 const cardsList = new Section({
   renderer: (card) => {
-    const newCard = new Card(card, userId, '.card-template', ()=>{
+    const newCard = new Card(card, userId, '.card-template', () => {
       fullPicPopup.open(card);
     }).createCard();
     return newCard;
   }
 }, '.photo-grid__list')
+
+Promise.all([api.getUserInfo(), api.getCards()])
+  .then(([profileInfo, cards]) => {
+    user.setUserInfo(profileInfo);
+    userId = profileInfo._id;
+    cardsList.renderCards(cards);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 //валидация
 const validateProfile = new FormValidator(settings, profileForm);
@@ -118,15 +129,7 @@ const user = new UserInfo({
 })
 
 
-Promise.all([api.getUserInfo(), api.getCards()])
-  .then(([profileInfo, cards]) => {
-    user.setUserInfo(profileInfo);
-    userId = profileInfo._id;
-    cardsList.renderCards(cards);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+
 
 //попап профиля
 profileOpenButton.addEventListener('click', () => {
