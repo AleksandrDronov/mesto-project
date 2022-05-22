@@ -14,10 +14,23 @@ import Section from './Section.js';
 import Popup from './Popup.js';
 import PopupWithImage from './PopupWithImage';
 
+let userId;
+
 const profilePopup = new Popup('.popup_type_profile');
 const avatarPopup = new Popup('.popup_type_add-avatar');
 const addPicPopup = new Popup('.popup_type_add-pic');
 const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
+
+function handleCardClick(name, link) {
+  fullPicPopup.open(name, link);
+}
+
+const cardsList = new Section({
+  renderer: (card) => {
+    const newCard = new Card(card, userId, '.card-template', handleCardClick).createCard();
+    return newCard;
+  }
+}, '.photo-grid__list')
 
 
 Promise.all([api.getProfileInfo(), api.getCards()])
@@ -25,18 +38,8 @@ Promise.all([api.getProfileInfo(), api.getCards()])
     profileTitle.textContent = profileInfo.name;
     profileSubtitle.textContent = profileInfo.about;
     profileAvatar.src = profileInfo.avatar;
-    const userId = profileInfo._id;
-    const cardsList = new Section({
-      items: cards,
-      renderer: (item) => {
-        const card = new Card(item, userId, '.card-template', () => {
-          fullPicPopup.open(item)
-        });
-        const cardElement = card.createCard();
-        cardsList.addItem(cardElement);
-      }
-    }, '.photo-grid__list')
-    cardsList.renderCards();
+    userId = profileInfo._id;
+    cardsList.renderCards(cards);
   })
   .catch((err) => {
     console.log(err);
@@ -136,10 +139,9 @@ function addPicFormSubmit(evt) {
 
   api.saveNewCard(placeInput, urlInput)
     .then((result) => {
-      const cardElement = new Card(result, result._id, '.photo-grid__card');
-      cardElement.createCard();
-      cardElement.renderCard(cardElement, cardsList);
-      closePopup(popupAddPic);
+      console.log(result);
+      cardsList.addItem(result);
+      addPicPopup.close();
 
       placeInput.value = '';
       urlInput.value = '';

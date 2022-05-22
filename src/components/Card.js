@@ -167,7 +167,7 @@ export default class Card {
     });
 
     cardImage.addEventListener('click', () => {
-      this._handleCardClick()
+      this._handleCardClick(this._cardName, this._cardUrl);
     });
 
     return this._element;

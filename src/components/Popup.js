@@ -14,18 +14,18 @@ export default class Popup {
     document.addEventListener('keydown', this._closePopupEsc.bind(this));
   }
 
-  _close() {
+  close() {
     document.querySelector(this._selector).classList.remove('popup_opened');
     document.removeEventListener('keydown', this._closePopupEsc.bind(this));
   }
 
   setEventListeners() {
     document.querySelector(this._selector).addEventListener('click', (evt) => {
-      this._closePopupOverlay(evt);
+      this.closePopupOverlay(evt);
     });
   }
 
-  _closePopupOverlay(evt) {
+  closePopupOverlay(evt) {
     if(evt.target.classList.contains('popup') || evt.target.classList.contains('popup__toggle')) {
       this._close();
     };
