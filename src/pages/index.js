@@ -1,16 +1,17 @@
 import '../pages/index.css'; // добавьте импорт главного файла сти лей
 
-import { api } from './Api.js';
+import { api } from '../components/Api.js';
 import {
   profileOpenButton, avatarOpenButton, nameInput, jobInput, profileTitle, profileSubtitle,
   addPicOpenButton, popupDelPic, profileForm, addPicForm, addAvatarForm, settings
-} from './constants.js';
-import Card from './Card.js';
-import FormValidator from './FormValidator.js';
-import Section from './Section.js';
-import PopupWithImage from './PopupWithImage.js';
-import PopupWithForm from './PopupWithForm.js';
-import UserInfo from './UserInfo';
+} from '../utils/constants.js';
+import Card from '../components/Card.js';
+import FormValidator from '../components/FormValidator.js';
+import Section from '../components/Section.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import UserInfo from '../components/UserInfo';
+import Popup from '../components/Popup.js'
 
 let userId;
 
@@ -19,13 +20,14 @@ let userId;
 }*/
 
 const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
-fullPicPopup.setEventListeners()
+fullPicPopup.setEventListeners();
+const delPicPopup = new Popup('.popup_type_delete-pic');
+delPicPopup.setEventListeners();
 
 const cardsList = new Section({
   renderer: (card) => {
-    const newCard = new Card(card, userId, '.card-template', () => {
-      fullPicPopup.open(card);
-    }).createCard();
+    const newCard = new Card(card, userId, '.card-template', () => { fullPicPopup.open(card)},
+    () => { delPicPopup.open() }, () => { delPicPopup.close() }).createCard();
     return newCard;
   }
 }, '.photo-grid__list')
@@ -40,13 +42,7 @@ Promise.all([api.getUserInfo(), api.getCards()])
     console.log(err);
   });
 
-//валидация
-const validateProfile = new FormValidator(settings, profileForm);
-validateProfile.enableValidation();
-const validateAvatar = new FormValidator(settings, addAvatarForm);
-validateAvatar.enableValidation();
-const validate = new FormValidator(settings, addPicForm);
-validate.enableValidation();
+
 
 const avatarPopup = new PopupWithForm('.popup_type_add-avatar',
 function handleSubmitForm(evt, input){
@@ -152,8 +148,10 @@ addPicOpenButton.addEventListener('click', () => {
   addPicPopup.open()
 });
 
-
-//попап подверждения удаления кратинки
-popupDelPic.addEventListener('click', (evt) => {
-  closePopupOverlay(evt, popupDelPic);
-});
+//валидация
+const validateProfile = new FormValidator(settings, profileForm);
+validateProfile.enableValidation();
+const validateAvatar = new FormValidator(settings, addAvatarForm);
+validateAvatar.enableValidation();
+export const validate = new FormValidator(settings, addPicForm);
+validate.enableValidation();

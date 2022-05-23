@@ -1,110 +1,8 @@
-import { cardTemplate, popupFullPic, popupDelPic, delPicButton } from "./constants.js";
-import { openPopup, closePopup } from "./modal.js";
+import { delPicButton } from "../utils/constants.js";
 import {api} from "./Api.js"
-import PopupWithImage from "./PopupWithImage.js";
-
-//функция лайка
-/*function likeCardElement(data, likeCount, likeButton) {
-  likeCount.textContent = data.likes.length;
-  likeButton.classList.toggle('photo-grid__button_active');
-};*/
-
-/*function checkMyLike(myId, likes) {
-  return likes.some((like) => {
-    return like._id === myId;
-  });
-};*/
-
-/*function likeCard(idCard, likeCount, likeButton) {
-  if(!likeButton.classList.contains('photo-grid__button_active')) {
-    addLikeCard(idCard)
-      .then((result) => {
-        likeCardElement(result, likeCount, likeButton);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    removeLikeCard(idCard)
-      .then((result) => {
-        likeCardElement(result, likeCount, likeButton);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-};*/
-
-//функция удаления карточки
-/*function deleteCardElement(cardElement) {
-  cardElement.remove();
-};
-
-function delCard (idCard, cardElement) {
-  delPicButton.addEventListener('click', () => {
-    deleteCard(idCard)
-      .then(() => {
-        deleteCardElement(cardElement);
-        closePopup(popupDelPic);
-      })
-      .catch((err) => {
-        console.log(err);
-    });
-  });
-};*/
-
-// функция создания карточки
-/*export function createCard(cardName, cardUrl, ownerId, myId, idCard, likesCard, likes) {
-
-  const cardElement = cardTemplate.querySelector('.photo-grid__card').cloneNode(true);
-  const cardImage = cardElement.querySelector('.photo-grid__image');
-  const cardTitle = cardElement.querySelector('.photo-grid__title');
-  const likeButton = cardElement.querySelector('.photo-grid__button');
-  const trashButton = cardElement.querySelector('.photo-grid__trash');
-  const likeCount = cardElement.querySelector('.photo-grid__like');
-
-  const popupImage = popupFullPic.querySelector('.popup__image');
-  const popupTitle = popupFullPic.querySelector('.popup__title');
-
-  cardImage.src = cardUrl;
-  cardImage.alt = cardName;
-  cardTitle.textContent = cardName;
-  likeCount.textContent = likesCard;
-
-  if(ownerId !== myId) {
-    trashButton.classList.add('photo-grid__trash_inactive')
-  } else {
-    trashButton.addEventListener('click', () => {
-      openPopup(popupDelPic);
-      delCard(idCard, cardElement);
-    });
-  };
-
-  if(checkMyLike(myId, likes)) {
-    likeButton.classList.toggle('photo-grid__button_active');
-  };
-
-  likeButton.addEventListener('click', () => {
-    likeCard(idCard, likeCount, likeButton);
-  });
-
-  cardImage.addEventListener('click', () => {
-    openPopup(popupFullPic);
-    popupImage.src = cardImage.src;
-    popupImage.alt = cardImage.alt;
-    popupTitle.textContent = cardImage.alt;
-  });
-
-  return cardElement;
-};*/
-
-//рендер карточки
-/*export function renderCard(card, container) {
-  container.prepend(card);
-}*/
 
 export default class Card {
-  constructor(card, userId, selector, handleCardClick) {
+  constructor(card, userId, selector, handleCardClick, handleDelButtonClick, handleDelPoupClose) {
     this._cardName = card.name;
     this._cardUrl = card.link;
     this._ownerId = card.owner._id;
@@ -114,6 +12,8 @@ export default class Card {
     this._likes = card.likes;
     this._selector = selector;
     this._handleCardClick = handleCardClick;
+    this._handleDelButtonClick = handleDelButtonClick;
+    this._handleDelPoupClose = handleDelPoupClose;
   }
 
   _getElement() {
@@ -153,7 +53,7 @@ export default class Card {
       trashButton.classList.add('photo-grid__trash_inactive')
     } else {
       trashButton.addEventListener('click', () => {
-        openPopup(popupDelPic);
+        this._handleDelButtonClick()
         this._delCard();
       });
     };
@@ -207,7 +107,7 @@ export default class Card {
       api.deleteCard(this._idCard)
         .then(() => {
           this._deleteCardElement();
-          closePopup(popupDelPic);
+          this._handleDelPoupClose()    ;
         })
         .catch((err) => {
           console.log(err);

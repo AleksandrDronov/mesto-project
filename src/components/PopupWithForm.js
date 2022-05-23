@@ -27,5 +27,12 @@ export default class PopupWithForm extends Popup {
   close(){
     super.close();
     this._form.reset();
+    this._form.querySelector('.form__button').classList.add('form__button_inactive');
+    this._form.querySelector('.form__button').setAttribute('disabled', true);
+    this._inputs.forEach((input) => {
+      const errorElement = this._form.querySelector(`.${input.id}-error`);
+      errorElement.classList.remove('form__item-error_active');
+      input.classList.remove('form__item_type_error');
+    })
   }
 }
