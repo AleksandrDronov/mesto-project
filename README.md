@@ -10,6 +10,6 @@
 5. Webpack
 
 ### Соавтор
-Климова Софья - [klmvsonya.yandex.ru]
+Климова Софья - [klmvsonya@yandex.ru]
 Ссылка на github: [https://github.com/klmvsn]
 
