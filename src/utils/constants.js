@@ -21,7 +21,6 @@ const cardsList = page.querySelector('.photo-grid__list');
 const cardTemplate = page.querySelector('.card-template').content;
 const delPicButton = page.querySelector('.form__button_small');
 const avatarImage = page.querySelector('.profile__avatar');
-const allFormButtons = page.querySelectorAll('.form__button');
 
   //для валидация
 const settings = {
