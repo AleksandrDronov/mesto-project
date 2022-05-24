@@ -132,5 +132,3 @@ addPicOpenButton.addEventListener('click', () => {
   addPicPopup.open();
   validate.resetPopup();
 });
-
-
