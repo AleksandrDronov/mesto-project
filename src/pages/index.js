@@ -25,7 +25,7 @@ const validateProfile = new FormValidator(settings, profileForm);
 validateProfile.enableValidation();
 const validateAvatar = new FormValidator(settings, addAvatarForm);
 validateAvatar.enableValidation();
-export const validate = new FormValidator(settings, addPicForm);
+const validate = new FormValidator(settings, addPicForm);
 validate.enableValidation();
 
 //инициализация секции с карточками
