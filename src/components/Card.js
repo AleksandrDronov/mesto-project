@@ -1,8 +1,7 @@
-import { delPicButton } from "../utils/constants.js";
-import {api} from "./Api.js"
+import { delPicButton } from "../utils/constants.js"; //надо будт удалить
 
 export default class Card {
-  constructor(card, userId, selector, handleCardClick, handleDelButtonClick, handleDelPoupClose) {
+  constructor(card, userId, selector, handleCardClick, handleDelButtonClick, handleDelPoupClose, api) {
     this._cardName = card.name;
     this._cardUrl = card.link;
     this._ownerId = card.owner._id;
@@ -14,6 +13,13 @@ export default class Card {
     this._handleCardClick = handleCardClick;
     this._handleDelButtonClick = handleDelButtonClick;
     this._handleDelPoupClose = handleDelPoupClose;
+    this._api = api;
+    this._element = this._getElement();
+    this._cardImage = this._element.querySelector('.photo-grid__image');
+    this._cardTitle = this._element.querySelector('.photo-grid__title');
+    this._likeButton = this._element.querySelector('.photo-grid__button');
+    this._trashButton = this._element.querySelector('.photo-grid__trash');
+    this._likeCount = this._element.querySelector('.photo-grid__like');
   }
 
   _getElement() {
@@ -36,51 +42,45 @@ export default class Card {
     });
   }
 
-  createCard() {
-    this._element = this._getElement();
-    const cardImage = this._element.querySelector('.photo-grid__image');
-    const cardTitle = this._element.querySelector('.photo-grid__title');
-    const likeButton = this._element.querySelector('.photo-grid__button');
-    const trashButton = this._element.querySelector('.photo-grid__trash');
-    const likeCount = this._element.querySelector('.photo-grid__like');
-
-    cardImage.src = this._cardUrl;
-    cardImage.alt = this._cardName;
-    cardTitle.textContent = this._cardName;
-    likeCount.textContent = this._likesCard;
+  _setEventListeners() {
 
     if (this._ownerId !== this._myId) {
-      trashButton.classList.add('photo-grid__trash_inactive')
+      this._trashButton.classList.add('photo-grid__trash_inactive')
     } else {
-      trashButton.addEventListener('click', () => {
+      this._trashButton.addEventListener('click', () => {
         this._handleDelButtonClick()
         this._delCard();
       });
     };
 
-    if (this._checkMyLike()) {
-      likeButton.classList.toggle('photo-grid__button_active');
-    };
-
-    likeButton.addEventListener('click', () => {
-      this._likeCard(likeCount, likeButton);
+    this._likeButton.addEventListener('click', () => {
+      this._likeCard(this._likeCount, this._likeButton);
     });
 
-    cardImage.addEventListener('click', () => {
+    this._cardImage.addEventListener('click', () => {
       this._handleCardClick();
     });
+  }
+
+  createCard() {
+    this._cardImage.src = this._cardUrl;
+    this._cardImage.alt = this._cardName;
+    this._cardTitle.textContent = this._cardName;
+    this._likeCount.textContent = this._likesCard;
+
+    this._setEventListeners();
 
     return this._element;
   }
 
-  _likeCardElement(data, likeCount, likeButton) {
-    likeCount.textContent = data.likes.length;
-    likeButton.classList.toggle('photo-grid__button_active');
+  _likeCardElement(data) {
+    this._likeCount.textContent = data.likes.length;
+    this._likeButton.classList.toggle('photo-grid__button_active');
   }
 
   _likeCard(likeCount, likeButton) {
     if (!likeButton.classList.contains('photo-grid__button_active')) {
-      api.addLikeCard(this._idCard)
+      this._api.addLikeCard(this._idCard)
         .then((result) => {
           this._likeCardElement(result, likeCount, likeButton);
         })
@@ -88,7 +88,7 @@ export default class Card {
           console.log(err);
         });
     } else {
-      api.removeLikeCard(this._idCard)
+      this._api.removeLikeCard(this._idCard)
         .then((result) => {
           this._likeCardElement(result, likeCount, likeButton);
         })
@@ -104,7 +104,7 @@ export default class Card {
 
   _delCard() {
     delPicButton.addEventListener('click', () => {
-      api.deleteCard(this._idCard)
+      this._api.deleteCard(this._idCard)
         .then(() => {
           this._deleteCardElement();
           this._handleDelPoupClose()    ;

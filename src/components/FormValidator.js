@@ -1,9 +1,8 @@
 export default class FormValidator {
   constructor(settings, form) {
-    this._settings = settings;
     this._form = form;
-    this._inputList = Array.from(this._form.querySelectorAll(this._settings.inputSelector));
-    this._submitButton = this._form.querySelector(this._settings.submitButtonSelector);
+    this._inputList = Array.from(this._form.querySelectorAll(settings.inputSelector));
+    this._submitButton = this._form.querySelector(settings.submitButtonSelector);
     this._inactiveButtonClass = settings.inactiveButtonClass;
     this._inputErrorClass = settings.inputErrorClass;
     this._errorClass = settings.errorClass;
@@ -65,7 +64,7 @@ export default class FormValidator {
   }
 
   //сброс формы после закрытия
-  resetPopup() {
+  resetValidation() {
     this._controlButtonState();
     this._inputList.forEach(input => {
       this._hideInputError(input);
