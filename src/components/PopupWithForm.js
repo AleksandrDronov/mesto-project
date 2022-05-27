@@ -37,13 +37,7 @@ export default class PopupWithForm extends Popup {
   }
 
   renderLoading(isLoading, buttonText) {
-    if (isLoading) {
-      this._submitButton.disabled = true;
-    }
-    else {
-      this._submitButton.disabled = false;
-    }
+    this._submitButton.disabled = isLoading ? true :false ;
     this._submitButton.textContent = buttonText;
-
   }
 }

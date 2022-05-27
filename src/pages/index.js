@@ -2,15 +2,15 @@ import '../pages/index.css'; // добавьте импорт главного �
 
 import { api } from '../components/Api.js';
 import {
-  profileOpenButton, avatarOpenButton, addPicOpenButton, profileForm, addPicForm, addAvatarForm, settings
+  profileOpenButton, avatarOpenButton, addPicOpenButton, profileForm, addPicForm, addAvatarForm, delPicButton, settings
 } from '../utils/constants.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Section from '../components/Section.js';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
-import UserInfo from '../components/UserInfo';
-import Popup from '../components/Popup.js'
+import PopupDelete from '../components/PopupDelete.js';
+import UserInfo from '../components/UserInfo.js';
 
 const user = new UserInfo({
   profileTitle: '.profile__title',
@@ -32,7 +32,7 @@ validate.enableValidation();
 const cardsList = new Section({
   renderer: (card) => {
     const newCard = new Card(card, userId, '.card-template', () => { fullPicPopup.open(card)},
-    () => { delPicPopup.open() }, () => { delPicPopup.close() }, api).createCard();
+    (id, card) => { delPicPopup.open(id, card) }, api).createCard();
     return newCard;
   }
 }, '.photo-grid__list');
@@ -53,7 +53,16 @@ const fullPicPopup = new PopupWithImage('.popup_type_full-pic');
 fullPicPopup.setEventListeners();
 
 //попап подтверждения удаления
-const delPicPopup = new Popup('.popup_type_delete-pic');
+const delPicPopup = new PopupDelete('.popup_type_delete-pic', function handleFormSubmit(){
+  api.deleteCard(delPicPopup._id)
+    .then(() => {
+      delPicPopup._card.remove();
+      delPicPopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+});
 delPicPopup.setEventListeners();
 
 //попап редактирования аватара

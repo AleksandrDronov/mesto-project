@@ -1,7 +1,5 @@
-import { delPicButton } from "../utils/constants.js"; //надо будт удалить
-
 export default class Card {
-  constructor(card, userId, selector, handleCardClick, handleDelButtonClick, handleDelPoupClose, api) {
+  constructor(card, userId, selector, handleCardClick, handleDelButtonClick, api) {
     this._cardName = card.name;
     this._cardUrl = card.link;
     this._ownerId = card.owner._id;
@@ -12,7 +10,6 @@ export default class Card {
     this._selector = selector;
     this._handleCardClick = handleCardClick;
     this._handleDelButtonClick = handleDelButtonClick;
-    this._handleDelPoupClose = handleDelPoupClose;
     this._api = api;
     this._element = this._getElement();
     this._cardImage = this._element.querySelector('.photo-grid__image');
@@ -48,8 +45,7 @@ export default class Card {
       this._trashButton.classList.add('photo-grid__trash_inactive')
     } else {
       this._trashButton.addEventListener('click', () => {
-        this._handleDelButtonClick()
-        this._delCard();
+        this._handleDelButtonClick(this._idCard, this._element);
       });
     };
 
@@ -96,22 +92,5 @@ export default class Card {
           console.log(err);
         });
     };
-  }
-
-  _deleteCardElement() {
-    this._element.remove();
-  }
-
-  _delCard() {
-    delPicButton.addEventListener('click', () => {
-      this._api.deleteCard(this._idCard)
-        .then(() => {
-          this._deleteCardElement();
-          this._handleDelPoupClose()    ;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
   }
 }
