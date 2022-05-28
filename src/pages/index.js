@@ -15,23 +15,30 @@ import UserInfo from '../components/UserInfo.js';
 const user = new UserInfo({
   profileTitle: '.profile__title',
   profileSubtitle: '.profile__subtitle',
-  profileAvatar: '.profile__avatar'
+  profileAvatar: '.profile__avatar',
 })
 
-let userId;
-
 //валидация
-const validateProfile = new FormValidator(settings, profileForm);
-validateProfile.enableValidation();
-const validateAvatar = new FormValidator(settings, addAvatarForm);
-validateAvatar.enableValidation();
-const validate = new FormValidator(settings, addPicForm);
-validate.enableValidation();
+
+const formValidators = {};
+
+// Включение валидации
+const enableValidation = (settings) => {
+  const formList = Array.from(document.querySelectorAll(settings.formSelector))
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(settings, formElement)
+    const formName = formElement.getAttribute('name')
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(settings);
 
 //инициализация секции с карточками
 const cardsList = new Section({
   renderer: (card) => {
-    const newCard = new Card(card, userId, '.card-template', () => { fullPicPopup.open(card)},
+    const newCard = new Card(card, user.userId, '.card-template', () => { fullPicPopup.open(card)},
     (id, card) => { delPicPopup.open(id, card) }, api).createCard();
     return newCard;
   }
@@ -41,7 +48,6 @@ const cardsList = new Section({
 Promise.all([api.getUserInfo(), api.getCards()])
   .then(([profileInfo, cards]) => {
     user.setUserInfo(profileInfo);
-    userId = profileInfo._id;
     cardsList.renderCards(cards);
   })
   .catch((err) => {
@@ -63,6 +69,7 @@ const delPicPopup = new PopupDelete('.popup_type_delete-pic', function handleFor
       console.log(err);
     })
 });
+
 delPicPopup.setEventListeners();
 
 //попап редактирования аватара
@@ -88,7 +95,7 @@ avatarPopup.setEventListeners();
 //открытие попапа аватара
 avatarOpenButton.addEventListener('click', () => {
   avatarPopup.open();
-  validateAvatar.resetValidation();
+  formValidators['avatar'].resetValidation();
 });
 
 //попап редактирования профиля
@@ -113,7 +120,7 @@ profilePopup.setEventListeners();
 //открытие попапа профиля
 profileOpenButton.addEventListener('click', () => {
   profilePopup.open();
-  validateProfile.resetValidation();
+  formValidators['profile'].resetValidation();
   profilePopup.setInputValues(user.getUserInfo());
 });
 
@@ -139,5 +146,5 @@ addPicPopup.setEventListeners();
 //открытие попапа добавления картинки
 addPicOpenButton.addEventListener('click', () => {
   addPicPopup.open();
-  validate.resetValidation();
+  formValidators['card'].resetValidation();
 });

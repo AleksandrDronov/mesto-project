@@ -1,3 +1,5 @@
+import { delPicButton } from "../utils/constants.js"; //надо будт удалить
+
 export default class Card {
   constructor(card, userId, selector, handleCardClick, handleDelButtonClick, api) {
     this._cardName = card.name;
@@ -50,7 +52,7 @@ export default class Card {
     };
 
     this._likeButton.addEventListener('click', () => {
-      this._likeCard(this._likeCount, this._likeButton);
+      this._likeCard();
     });
 
     this._cardImage.addEventListener('click', () => {
@@ -64,6 +66,10 @@ export default class Card {
     this._cardTitle.textContent = this._cardName;
     this._likeCount.textContent = this._likesCard;
 
+    if (this._checkMyLike()) {
+      this._likeButton.classList.toggle('photo-grid__button_active');
+    };
+
     this._setEventListeners();
 
     return this._element;
@@ -74,11 +80,11 @@ export default class Card {
     this._likeButton.classList.toggle('photo-grid__button_active');
   }
 
-  _likeCard(likeCount, likeButton) {
-    if (!likeButton.classList.contains('photo-grid__button_active')) {
+  _likeCard() {
+    if (!this._likeButton.classList.contains('photo-grid__button_active')) {
       this._api.addLikeCard(this._idCard)
         .then((result) => {
-          this._likeCardElement(result, likeCount, likeButton);
+          this._likeCardElement(result);
         })
         .catch((err) => {
           console.log(err);
@@ -86,11 +92,28 @@ export default class Card {
     } else {
       this._api.removeLikeCard(this._idCard)
         .then((result) => {
-          this._likeCardElement(result, likeCount, likeButton);
+          this._likeCardElement(result);
         })
         .catch((err) => {
           console.log(err);
         });
     };
+  }
+
+  _deleteCardElement() {
+    this._element.remove();
+  }
+
+  _delCard() {
+    delPicButton.addEventListener('click', () => {
+      this._api.deleteCard(this._idCard)
+        .then(() => {
+          this._deleteCardElement();
+          this._handleDelPoupClose()    ;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   }
 }
