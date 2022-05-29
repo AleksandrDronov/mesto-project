@@ -60,9 +60,9 @@ fullPicPopup.setEventListeners();
 
 //попап подтверждения удаления
 const delPicPopup = new PopupDelete('.popup_type_delete-pic', function handleFormSubmit(){
-  api.deleteCard(delPicPopup._id)
+  api.deleteCard(delPicPopup.id)
     .then(() => {
-      delPicPopup._card.remove();
+      delPicPopup.card.remove();
       delPicPopup.close();
     })
     .catch((err) => {

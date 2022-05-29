@@ -1,5 +1,3 @@
-import { delPicButton } from "../utils/constants.js"; //надо будт удалить
-
 export default class Card {
   constructor(card, userId, selector, handleCardClick, handleDelButtonClick, api) {
     this._cardName = card.name;
@@ -29,10 +27,6 @@ export default class Card {
       .cloneNode(true);
 
     return cardElement;
-  }
-
-  renderCard(card, container) {
-    container.prepend(card);
   }
 
   _checkMyLike() {
