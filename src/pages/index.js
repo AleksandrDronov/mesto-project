@@ -17,7 +17,7 @@ const user = new UserInfo({
   profileSubtitle: '.profile__subtitle',
   profileAvatar: '.profile__avatar',
 })
-
+console.log(user)
 //валидация
 
 const formValidators = {};
