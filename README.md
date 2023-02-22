@@ -8,3 +8,20 @@
 3. БЭМ
 4. JS
 
+### Запуск проекта:
+
+1. Клонировать репозиторий.
+
+   git clone git@github.com:AleksandrDronov/mesto-project.git
+
+2. Войти в папку проекта.
+
+   cd mesto-project
+
+3. Установить зависимости.
+
+   npm install
+
+4. Запуск.
+
+   npm dev
