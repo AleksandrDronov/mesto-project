@@ -24,4 +24,4 @@
 
 4. Запуск.
 
-   npm dev
+   npm run dev
