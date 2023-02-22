@@ -1,4 +1,4 @@
-# Проект: Место
+# Место
 
 [ссылка](https://aleksandrdronov.github.io/mesto-project/)
 
