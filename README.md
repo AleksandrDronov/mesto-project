@@ -1,4 +1,4 @@
-# Место
+# Место. Аналог инстаграмма
 
 [ссылка](https://aleksandrdronov.github.io/mesto-project/)
 
